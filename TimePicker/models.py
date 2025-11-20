@@ -28,7 +28,14 @@ class CalendarSlot(models.Model):
 
 class Course(models.Model):
     name = models.CharField(max_length=100)
-    calendar_slot = models.ForeignKey(CalendarSlot, on_delete=models.CASCADE, related_name='courses')
+    calendar_slot = models.ForeignKey(
+    CalendarSlot,
+    on_delete=models.CASCADE,
+    related_name='courses',
+    null=True,
+    blank=True
+)
+
 
     def __str__(self):
         return self.name
