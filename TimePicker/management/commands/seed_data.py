@@ -24,19 +24,19 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Courses created."))
 
         # === Create Calendar Slots ===
-        days = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
-        times = ["3-5", "5-7", "7-9"]
+        # days = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        # times = ["3-5", "5-7", "7-9"]
 
-        for course in course_objs:
-            for d in days:
-                for t in times:
-                    CalendarSlot.objects.get_or_create(
-                        day=d,
-                        slot_time=t,
-                        empty=True,
-                        count_student=0,
-                    )
-        self.stdout.write(self.style.SUCCESS("Calendar slots created."))
+        # for course in course_objs:
+        #     for d in days:
+        #         for t in times:
+        #             CalendarSlot.objects.get_or_create(
+        #                 day=d,
+        #                 slot_time=t,
+        #                 empty=True,
+        #                 count_student=0,
+        #             )
+        # self.stdout.write(self.style.SUCCESS("Calendar slots created."))
 
         # === Create Students ===
         students = ["Ali", "Sara", "Reza", "Zahra", "Mahsa", "Hossein"]
