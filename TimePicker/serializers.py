@@ -16,6 +16,13 @@ class CalendarSlotSerializer(serializers.ModelSerializer):
 
 
 class CourseSerializer(serializers.ModelSerializer):
+    calendar_slots = CalendarSlotSerializer(many=True, read_only=True)
+
     class Meta:
         model = Course
-        fields = ['id', 'name', 'calendar_slot']
+        fields = ["id", "name", "created_at", "updated_at", "calendar_slots"]
+
+        
+        
+
+    
