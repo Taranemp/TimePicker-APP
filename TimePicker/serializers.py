@@ -23,6 +23,8 @@ class CourseSerializer(serializers.ModelSerializer):
         fields = ["id", "name", "created_at", "updated_at", "calendar_slots"]
 
         
-        
+class RegisterSlotSerializer(serializers.Serializer):
+    calendar_slot = serializers.IntegerField()
+    student = serializers.IntegerField()
 
     
