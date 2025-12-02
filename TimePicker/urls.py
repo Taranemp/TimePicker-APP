@@ -11,8 +11,8 @@ urlpatterns = [
     path('courses/<int:pk>',views.CourseDetailView.as_view(),name='course-detail'),
     path('slots/', views.CalendarSlotListCreateView.as_view(), name='slot-list'),
     path('slots/<int:pk>/', views.CalendarSlotDetailView.as_view(), name='slot-detail'),
-    path("select/", views.SelectStudentSlotApiView.as_view(), name="choose-slot"),
-    path("deselect/", views.DeselectStudentChoiceApiView.as_view(), name="remove-slot"),
+    path("selected/", views.SelectStudentSlotApiView.as_view(), name="choose-slot"),
+    path("deselected/", views.DeselectStudentChoiceApiView.as_view(), name="remove-slot"),
     path("slot/<int:slot_id>/activate/", views.ActivateSlotApiView.as_view(), name="activate-slot"),
     path("slot/<int:slot_id>/deactivate/", views.DeactivateSlotApiView.as_view(), name="deactivate-slot"),
     
