@@ -10,6 +10,16 @@ class Course(models.Model):
         return self.title
 
 
+class Student(models.Model):
+    name = models.CharField(max_length=255)
+    phone = models.CharField(max_length=20)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.phone})"
+
+
 class CalendarSlot(models.Model):
     DAYS_OF_WEEK = [
         ('saturday', 'Saturday'),
@@ -45,10 +55,9 @@ class CalendarSlot(models.Model):
 
 class StudentPick(models.Model):
     calendar_slot = models.ForeignKey(CalendarSlot, related_name='student_picks', on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    phone = models.CharField(max_length=20)
+    student = models.ForeignKey(Student, related_name='student_picks', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.name} ({self.phone})"
+        return f"{self.student.name} ({self.calendar_slot.course})"

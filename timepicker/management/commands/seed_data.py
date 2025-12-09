@@ -2,10 +2,11 @@ from django.core.management.base import BaseCommand
 from django.core.management import call_command
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from timepicker.models import Course, CalendarSlot  # ← مسیر را با نام اپ خود تنظیم کن
+from timepicker.models import Course, CalendarSlot, Student, StudentPick
 import random
 
 class Command(BaseCommand):
+
     help = "Seed the database with initial admin, courses, and calendar slots."
 
     def handle(self, *args, **options):
@@ -60,5 +61,40 @@ class Command(BaseCommand):
                         count=0,
                     )
         self.stdout.write(self.style.SUCCESS("Calendar slots created successfully."))
+
+        # === Create Students ===
+        self.stdout.write("Creating students...")
+        students_data = [
+            {"name": "Ali Ahmadi", "phone": "09123456789"},
+            {"name": "Sara Mohammadi", "phone": "09876543210"},
+            {"name": "Reza Hosseini", "phone": "09112223344"},
+            {"name": "Zahra Karimi", "phone": "09998887766"},
+        ]
+        students = []
+        for data in students_data:
+            student, _ = Student.objects.get_or_create(**data)
+            students.append(student)
+        self.stdout.write(self.style.SUCCESS("Students created."))
+
+        # === Create StudentPicks ===
+        self.stdout.write("Creating student picks...")
+        # Get all available slots (status=True)
+        available_slots = CalendarSlot.objects.filter(status=True)
+        
+        # Create some student picks for random slots
+        for student in students:
+            # Each student picks 2-3 random available slots
+            num_picks = random.randint(2, 3)
+            selected_slots = random.sample(list(available_slots), min(num_picks, len(available_slots)))
+            
+            for slot in selected_slots:
+                # Check if student already picked this slot
+                if not StudentPick.objects.filter(student=student, calendar_slot=slot).exists():
+                    StudentPick.objects.create(student=student, calendar_slot=slot)
+                    # Update slot count
+                    slot.count = slot.student_picks.count()
+                    slot.save()
+        
+        self.stdout.write(self.style.SUCCESS("Student picks created successfully."))
 
         self.stdout.write(self.style.SUCCESS("✅ Seeding complete!"))
