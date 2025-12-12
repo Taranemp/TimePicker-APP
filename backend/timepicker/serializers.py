@@ -4,7 +4,7 @@ from .models import Course, CalendarSlot, StudentPick, Student
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ['id', 'name', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'phone', 'created_at', 'updated_at']
 
 class StudentPickSerializer(serializers.ModelSerializer):
     student = StudentSerializer(read_only=True)
@@ -24,7 +24,7 @@ class CalendarSlotSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CalendarSlot
-        fields = ['id', 'course', 'day', 'time', 'status', 'count', 'student_picks']
+        fields = ['id', 'day', 'time', 'status', 'count', 'student_picks']
 
 class CourseSerializer(serializers.ModelSerializer):
     calendar_slots = CalendarSlotSerializer(many=True, read_only=True)
@@ -32,7 +32,3 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ['id', 'title', 'created_at', 'updated_at', 'calendar_slots']
-
-class RegisterSlotSerializer(serializers.Serializer):
-    calendar_slot = serializers.IntegerField()
-    student = serializers.IntegerField()

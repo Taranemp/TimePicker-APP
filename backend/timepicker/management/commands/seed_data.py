@@ -45,7 +45,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Courses created."))
 
         # === Create CalendarSlots ===
-        days = ["saturday", "sunday", "monday", "tuesday", "wednesday", "thursday"]
+        days = ["saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday"]
         times = ["3-5", "5-7", "7-9"]
 
         for course in courses:
@@ -65,10 +65,10 @@ class Command(BaseCommand):
         # === Create Students ===
         self.stdout.write("Creating students...")
         students_data = [
-            {"name": "Ali Ahmadi",},
-            {"name": "Sara Mohammadi",},
-            {"name": "Reza Hosseini",},
-            {"name": "Zahra Karimi",},
+            {"name": "Ali Ahmadi", "phone": "09123456789"},
+            {"name": "Sara Mohammadi", "phone": "09876543210"},
+            {"name": "Reza Hosseini", "phone": "09112223344"},
+            {"name": "Zahra Karimi", "phone": "09998887766"},
         ]
         students = []
         for data in students_data:
