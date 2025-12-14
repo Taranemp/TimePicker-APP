@@ -4,10 +4,9 @@ import './App.css'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 import Layout from '@/Layout.jsx';
-import Home from '@/pages/Home.jsx';
 import Students from '@/pages/Students.jsx';
 import Courses from '@/pages/Courses.jsx';
-import Calenders from '@/pages/Calenders.jsx';
+import ShowCourseCalendar from '@/pages/ShowCourseCalendar.jsx';
 
 function App() {
   console.log('run');
@@ -15,10 +14,10 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="/students" element={<Students />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/calenders" element={<Calenders />} />
+            <Route index element={<Courses />} />
+            <Route path="/students" element={<Students />} />
+            <Route path="/courses" element={<Courses />} />
+            <Route path="/course/calendar/:id" element={<ShowCourseCalendar />} />
         </Route>
       </Routes>
     </BrowserRouter>

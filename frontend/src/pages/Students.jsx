@@ -25,13 +25,15 @@ export default function Students() {
     if (error) return <div>Error loading students</div>;
 
     return (
-        <div>
+        <div className="mx-auto">
             <h3>Students</h3>
-            <div className="my-4">
+            <div className="row mx-auto">
                 {students.map((student) => (
-                    <Button key={student.id} variant="primary" size="sm" className="mx-2 px-4">
-                        {student.name}
-                    </Button>
+                    <div className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 xol-xxl-1 p-1">
+                        <Button key={student.id} variant="primary" size="sm" className="overflow-hidden text-nowrap w-100">
+                            {student.name}
+                        </Button>
+                    </div>
                 ))}
             </div>
 
