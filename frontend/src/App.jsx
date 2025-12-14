@@ -10,6 +10,7 @@ import Courses from '@/pages/Courses.jsx';
 import Calenders from '@/pages/Calenders.jsx';
 
 function App() {
+  console.log('run');
   return (
     <BrowserRouter>
       <Routes>
