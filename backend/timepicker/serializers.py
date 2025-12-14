@@ -18,13 +18,14 @@ class StudentPickSerializer(serializers.ModelSerializer):
         model = StudentPick
         fields = ['id', 'student', 'student_id', 'calendar_slot', 'created_at']
 
+
 class CalendarSlotSerializer(serializers.ModelSerializer):
     # include nested student picks
     student_picks = StudentPickSerializer(many=True, read_only=True)
 
     class Meta:
         model = CalendarSlot
-        fields = ['id', 'day', 'time', 'status', 'count', 'student_picks']
+        fields = ['id', 'course', 'day', 'time', 'status', 'count', 'student_picks']
 
 class CourseSerializer(serializers.ModelSerializer):
     calendar_slots = CalendarSlotSerializer(many=True, read_only=True)

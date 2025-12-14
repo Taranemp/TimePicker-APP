@@ -46,6 +46,8 @@ class CourseViewSet(viewsets.ModelViewSet):
         slots.update(status=True, count=0)
         return Response({'ok': True})
 
+from collections import defaultdict
+
 class CalendarSlotViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Read-only list/retrieve for slots.
@@ -55,6 +57,18 @@ class CalendarSlotViewSet(viewsets.ReadOnlyModelViewSet):
     """
     queryset = CalendarSlot.objects.all().select_related('course').prefetch_related('student_picks')
     serializer_class = CalendarSlotSerializer
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+        data = serializer.data
+
+        grouped = defaultdict(list)
+        for item in data:
+            course_id = str(item['course'])
+            grouped[course_id].append(item)
+
+        return Response(grouped)
 
     @action(detail=True, methods=['patch'])
     def toggle_status(self, request, pk=None):
@@ -68,6 +82,7 @@ class CalendarSlotViewSet(viewsets.ReadOnlyModelViewSet):
         slot = self.get_object()
         students = slot.student_picks.all()
         return Response(StudentPickSerializer(students, many=True).data)
+
 
 class StudentPickViewSet(viewsets.ModelViewSet):
     """
