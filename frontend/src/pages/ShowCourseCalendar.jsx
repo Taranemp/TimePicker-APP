@@ -39,12 +39,17 @@ export default function ShowCourseCalendar() {
 
     return (
         <div>
-            <h3 className="my-5">{courseCalendar.title}</h3>
+            <div className="d-inline-block bg-primary my-0 mb-5 py-2 ps-4 pe-5 rounded-end-5">
+                <p className="p-0 m-0 h4">
+                    {courseCalendar.title}
+                </p>
+            </div>
+
             <div className="mx-auto" style={{ maxWidth: "700px" }}>
                 <Table borderless hover>
                     <thead>
                     <tr>
-                        <th>Day</th>
+                        <th></th>
                         {times.map(time => <th className="text-center" key={time}>{time}</th>)}
                     </tr>
                     </thead>

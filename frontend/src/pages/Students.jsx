@@ -26,11 +26,13 @@ export default function Students() {
 
     return (
         <div className="mx-auto">
-            <h3>Students</h3>
+            <div className="d-inline-block bg-primary my-0 mb-5 py-2 ps-4 pe-5 rounded-end-5">
+                <p className="p-0 m-0 h4">Students List</p>
+            </div>
             <div className="row mx-auto">
                 {students.map((student) => (
                     <div className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 xol-xxl-1 p-1">
-                        <Button key={student.id} variant="primary" size="sm" className="overflow-hidden text-nowrap w-100">
+                        <Button key={student.id} variant="secondary" size="sm" className="overflow-hidden text-nowrap w-100">
                             {student.name}
                         </Button>
                     </div>

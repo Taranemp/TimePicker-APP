@@ -4,7 +4,7 @@ import {Button} from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
 
 
-export default function Courses() {
+export default function ShowCourseList() {
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -33,12 +33,22 @@ export default function Courses() {
 
     return (
       <div>
-        <h3>Courses</h3>
-          <div className="my-4">
+          <div className="d-inline-block bg-primary my-0 mb-5 py-2 ps-4 pe-5 rounded-end-5">
+              <p className="p-0 m-0 h4">Courses List</p>
+          </div>
+          <div className="row mx-auto">
               {courses.map((course) => (
-                  <Button onClick={ () => { goToCourseCalendar(course.id) }} key={course.id} variant="primary" size="sm" className="mx-2 px-4">
-                      {course.title}
-                  </Button>
+                  <div className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 xol-xxl-1 p-1">
+                      <Button
+                          onClick={ () => { goToCourseCalendar(course.id) }}
+                          key={course.id}
+                          variant="secondary"
+                          size="sm"
+                          className="overflow-hidden text-nowrap w-100"
+                      >
+                          {course.title}
+                      </Button>
+                  </div>
               ))}
           </div>
       </div>
