@@ -1,0 +1,71 @@
+import {useState} from "react";
+import Button from "react-bootstrap/Button";
+import {handleRegisterStudent} from "@/services/StudentAuthService.js";
+import { useNavigate } from "react-router-dom";
+
+
+export default function StudentLogin() {
+    const [name, setName] = useState("");
+    const [phone, setPhone] = useState("");
+    const navigate = useNavigate();
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        if (!name || !phone) {
+            alert("Please enter both name and phone.");
+            return;
+        }
+
+        const result = await handleRegisterStudent(name, phone);
+
+        if (!result.ok) {
+            alert(JSON.stringify(result.error));
+            return;
+        }
+
+        navigate("/");
+        window.location.reload()
+    };
+
+
+    return (
+        <div className="container-fluid">
+            <div className="row mx-auto justify-content-center align-items-center" style={{height: "80vh"}}>
+                <div className="col-12 col-md-6 col-xl-5 col-xxl-4 mt-5">
+                    <div className="bg-body-secondary shadow rounded-5 p-5">
+                        <form onSubmit={handleLogin}>
+                            <div className="form-group">
+                                <label htmlFor="name" className="form-label mb-2">Name</label>
+                                <input
+                                    className="form-control"
+                                    type="text"
+                                    id="name"
+                                    value={name}
+                                    onChange={(e) => setName(e.target.value)}
+                                    placeholder="John Doe"
+                                />
+                            </div>
+
+                            <div className="form-group">
+                                <label htmlFor="phone" className="form-label mb-2 mt-4">Phone</label>
+                                <input
+                                    className="form-control"
+                                    type="text"
+                                    id="phone"
+                                    value={phone}
+                                    onChange={(e) => setPhone(e.target.value)}
+                                    placeholder="0912 ...."
+                                />
+                            </div>
+
+                            <Button type="submit" className="btn btn-primary mt-5 w-100">
+                                Login
+                            </Button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+}

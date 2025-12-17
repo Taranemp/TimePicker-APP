@@ -1,0 +1,56 @@
+import {useEffect, useState} from "react";
+import apiService from "@/services/apiService.js";
+import {Button} from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
+
+
+export default function ShowCourseList() {
+    const [courses, setCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+
+    const navigate = useNavigate();
+    function goToCourseCalendar(id) {
+        navigate(`/course/calendar/${id}`, { replace: true });
+    }
+
+    useEffect(() => {
+        const fetchCourses = async () => {
+            const result = await apiService("get", "/courses/");
+            if (result.data) {
+                setCourses(result.data);
+            } else {
+                setError(result.error);
+                console.error("Error:", result.error.message);
+            }
+            setLoading(false);
+        };
+        fetchCourses();
+    }, [])
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>Error loading courses</div>;
+
+    return (
+      <div>
+          <div className="d-inline-block bg-primary my-0 mb-5 py-2 ps-4 pe-5 rounded-end-5">
+              <p className="p-0 m-0 h4">Courses List</p>
+          </div>
+          <div className="row mx-auto">
+              {courses.map((course) => (
+                  <div className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 xol-xxl-1 p-1" key={course.id}>
+                      <Button
+                          onClick={ () => { goToCourseCalendar(course.id) }}
+                          key={course.id}
+                          variant="secondary"
+                          size="sm"
+                          className="overflow-hidden text-nowrap w-100"
+                      >
+                          {course.title}
+                      </Button>
+                  </div>
+              ))}
+          </div>
+      </div>
+    )
+  }

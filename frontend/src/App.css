@@ -1,0 +1,8 @@
+html {
+    font-size: 90%; /* 16px * 0.875 = 14px */
+}
+
+th, td {
+    width: 100px !important;
+}
+
