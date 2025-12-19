@@ -91,16 +91,13 @@ class RegisterStudentSlotApiView(APIView):
         slot = get_object_or_404(CalendarSlot, id=slot_id)
         student = get_object_or_404(Student, id=student_id)
 
-        # بررسی فعال بودن slot
         if not slot.status:
-            return Response({"error": "Slot is not available"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"message": "Slot is not available"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # جلوگیری از ثبت تکراری
         if StudentPick.objects.filter(calendar_slot=slot, student=student).exists():
-            return Response({"error": "Student already registered for this slot"},
+            return Response({"message": "Student already registered for this slot"},
                             status=status.HTTP_400_BAD_REQUEST)
 
-        # ثبت pick
         pick = StudentPick.objects.create(calendar_slot=slot, student=student)
         slot.count = slot.student_picks.count()
         slot.save()

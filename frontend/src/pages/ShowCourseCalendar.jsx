@@ -3,6 +3,7 @@ import apiService from "@/services/apiService.js";
 import { Table, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import {getUserInfo} from "@/services/StudentAuthService.js";
+import {toaste} from '@/components/partitions/ToastNotifications.jsx'
 
 async function handleRegisterStudentSlot(slotId, refreshData) {
     const student_id = localStorage.getItem('student_id');
@@ -13,14 +14,13 @@ async function handleRegisterStudentSlot(slotId, refreshData) {
         });
 
         if (result.data) {
-            alert("Slot registered successfully!");
-        } else {
-            alert("fail handleRegisterStudentSlot");
+            toaste.show("Success", "Data saved successfully!", 2500, 'success');
+        } else if (result?.error?.response?.data?.message) {
+            toaste.show("Failed !", result.error.response.data.message, 2500, 'danger');
         }
 
         refreshData();
     } catch (err) {
-        console.error(err);
         alert(err?.response?.data?.error || "Failed to register slot");
     }
 }

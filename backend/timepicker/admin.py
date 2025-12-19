@@ -9,8 +9,8 @@ class StudentPickInlineForStudent(admin.TabularInline):
 
 @admin.register(Student)
 class StudentAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "phone", "created_at", "updated_at")
-    search_fields = ("name", "phone")
+    list_display = ("id", "name", "created_at", "updated_at")
+    search_fields = ("name",)
     ordering = ("-created_at",)
     inlines = [StudentPickInlineForStudent]
 
@@ -44,5 +44,5 @@ class CalendarSlotAdmin(admin.ModelAdmin):
 class StudentPickAdmin(admin.ModelAdmin):
     list_display = ("id", "student", "calendar_slot", "created_at")
     list_filter = ("calendar_slot__day", "calendar_slot__course")
-    search_fields = ("student__name", "student__phone")
+    search_fields = ("student__name",)
     ordering = ("-created_at",)

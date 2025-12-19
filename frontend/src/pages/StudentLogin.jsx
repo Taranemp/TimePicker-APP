@@ -6,18 +6,17 @@ import { useNavigate } from "react-router-dom";
 
 export default function StudentLogin() {
     const [name, setName] = useState("");
-    const [phone, setPhone] = useState("");
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        if (!name || !phone) {
-            alert("Please enter both name and phone.");
+        if (!name) {
+            alert("Please enter both name.");
             return;
         }
 
-        const result = await handleRegisterStudent(name, phone);
+        const result = await handleRegisterStudent(name);
 
         if (!result.ok) {
             alert(JSON.stringify(result.error));
@@ -46,19 +45,6 @@ export default function StudentLogin() {
                                     placeholder="John Doe"
                                 />
                             </div>
-
-                            <div className="form-group">
-                                <label htmlFor="phone" className="form-label mb-2 mt-4">Phone</label>
-                                <input
-                                    className="form-control"
-                                    type="text"
-                                    id="phone"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    placeholder="0912 ...."
-                                />
-                            </div>
-
                             <Button type="submit" className="btn btn-primary mt-5 w-100">
                                 Login
                             </Button>

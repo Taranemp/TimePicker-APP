@@ -4,7 +4,7 @@ from .models import Course, CalendarSlot, StudentPick, Student
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ['id', 'name', 'phone', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'created_at', 'updated_at']
 
 class StudentPickSerializer(serializers.ModelSerializer):
     student = StudentSerializer(read_only=True)

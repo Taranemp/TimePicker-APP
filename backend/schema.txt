@@ -23,6 +23,5 @@ StudentPick
 id PK uuid
 calendar_slot_id uuid FK >- CalendarSlot.id
 name string
-phone string
 created_at datetime
 updated_at datetime

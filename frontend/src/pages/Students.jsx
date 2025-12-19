@@ -14,7 +14,6 @@ export default function Students() {
                 setStudents(result.data);
             } else {
                 setError(result.error);
-                console.error("Error:", result.error.message);
             }
             setLoading(false);
         };

@@ -21,7 +21,6 @@ export default function ShowCourseList() {
                 setCourses(result.data);
             } else {
                 setError(result.error);
-                console.error("Error:", result.error.message);
             }
             setLoading(false);
         };
