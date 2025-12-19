@@ -32,7 +32,6 @@ function App() {
                 <Route path="/students-login"
                     element={isLoggedIn ? <Navigate to="/" replace /> : <StudentLogin />}
                 />
-
                 <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
                     <Route index element={<ShowCourseList />} />
                     <Route path="/students" element={<Students />} />

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import apiService from "@/services/apiService.js";
 import { Table, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
+import {getUserInfo} from "@/services/StudentAuthService.js";
 
 async function handleRegisterStudentSlot(slotId, refreshData) {
     const student_id = localStorage.getItem('student_id');
@@ -11,8 +12,12 @@ async function handleRegisterStudentSlot(slotId, refreshData) {
             student: student_id
         });
 
-        console.log(result);
-        alert("Slot registered successfully!");
+        if (result.data) {
+            alert("Slot registered successfully!");
+        } else {
+            alert("fail handleRegisterStudentSlot");
+        }
+
         refreshData();
     } catch (err) {
         console.error(err);
@@ -21,7 +26,10 @@ async function handleRegisterStudentSlot(slotId, refreshData) {
 }
 
 export default function ShowCourseCalendar() {
+    // get course id
     const { id } = useParams();
+
+
     const [courseCalendar, setCourseCalendar] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -55,6 +63,20 @@ export default function ShowCourseCalendar() {
         calendarMap[slot.day][slot.time] = slot;
     });
 
+
+    function is_selected(student_picks){
+        const user_info = getUserInfo()
+        const user_id = user_info.id
+        const result = student_picks.some(item => parseInt(item.student.id) === parseInt(user_id));
+
+        if (result){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
     return (
         <div>
             <div className="d-inline-block bg-primary my-0 mb-5 py-2 ps-4 pe-5 rounded-end-5">
@@ -81,10 +103,10 @@ export default function ShowCourseCalendar() {
                                     <td key={time} className="text-center">
                                         {slot ? (
                                             <Button
-                                                variant={slot.status ? "primary" : "secondary"}
+                                                // variant={slot.status ? "primary" : "secondary"}
                                                 disabled={!slot.status}
                                                 size="sm"
-                                                className="w-100"
+                                                className={`w-100 ${is_selected(slot.student_picks) ? 'btn-success' : 'btn-primary'}`}
                                                 style={{ maxWidth: "100px" }}
                                                 onClick={() => handleRegisterStudentSlot(slot.id, fetchCalendar)}
                                             >
