@@ -23,6 +23,14 @@ export function isStudentLoggedIn() {
 }
 
 
+export function isAdminLoggedIn() {
+    const user_token = localStorage.getItem('user_token');
+
+    if (user_token) { return true }
+    return false;
+}
+
+
 export async function handleStudentLogout() {
     localStorage.removeItem("student_name");
     localStorage.removeItem("student_id");

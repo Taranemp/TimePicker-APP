@@ -1,7 +1,7 @@
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { Link } from 'react-router-dom';
-import { isStudentLoggedIn, handleStudentLogout } from "@/services/StudentAuthService.js";
+import { isStudentLoggedIn, handleStudentLogout } from "@/services/AuthService.js";
 import {Button} from "react-bootstrap";
 import AlertModal from '@/components/partitions/AlertModal.jsx'
 

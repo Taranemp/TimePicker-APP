@@ -2,31 +2,9 @@ import { useEffect, useState } from "react";
 import apiService from "@/services/apiService.js";
 import { Table, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import {getUserInfo} from "@/services/AuthService.js";
-import {toaste} from '@/components/partitions/ToastNotifications.jsx'
 
-async function handleRegisterStudentSlot(slotId, refreshData) {
-    const student_id = localStorage.getItem('student_id');
-    try {
-        const result = await apiService("post", `/register-slot/`, {
-            calendar_slot: slotId,
-            student: student_id
-        });
 
-        if (result.data) {
-            toaste.show("Success", "Data saved successfully!", 2500, 'success');
-        } else if (result?.error?.response?.data?.message) {
-            toaste.show("Failed !", result.error.response.data.message, 2500, 'danger');
-        }
-
-        refreshData();
-    } catch (err) {
-        alert(err?.response?.data?.error || "Failed to register slot");
-    }
-}
-
-export default function ShowCourseCalendar() {
-    // get course id
+export default function AdminShowCourseCalendar() {
     const { id } = useParams();
 
 
@@ -63,16 +41,22 @@ export default function ShowCourseCalendar() {
         calendarMap[slot.day][slot.time] = slot;
     });
 
+    function setColor(status, count){
+        if (status && count > 0) {
+            return '';
+        } else if (!status){
+            return 'btn-secondary opacity-25';
+        } else if (status && count === 0){
+            return 'btn-info opacity-25';
+        }
+    }
 
-    function is_selected(student_picks){
-        const user_info = getUserInfo()
-        const user_id = user_info.id
-        const result = student_picks.some(item => parseInt(item.student.id) === parseInt(user_id));
 
-        if (result){
-            return true;
-        } else {
-            return false;
+    function setOpacity(status, count){
+        if (status) {
+            if (count > 0) {
+                return `rgba(0,0,255,${count*0.2})`
+            } 
         }
     }
 
@@ -103,14 +87,12 @@ export default function ShowCourseCalendar() {
                                     <td key={time} className="text-center">
                                         {slot.status ? (
                                             <Button
-                                                variant={slot.status ? "" : "secondary"}
                                                 disabled={!slot.status}
                                                 size="sm"
-                                                className={`w-100 ${is_selected(slot.student_picks) ? 'btn-success' : 'btn-primary'}`}
-                                                style={{ maxWidth: "100px" }}
-                                                onClick={() => handleRegisterStudentSlot(slot.id, fetchCalendar)}
+                                                className={`w-100 ${setColor(slot.status, slot.count)}`}
+                                                style={{ maxWidth: "100px", backgroundColor: setOpacity(slot.status, slot.count) }}
                                             >
-                                                {slot.status ? `${slot.id} [${slot.count}]` : "..."}
+                                                {slot.status ? `${slot.count}` : "..."}
                                             </Button>
                                         ) : (
                                             <Button variant="secondary" disabled size="sm">

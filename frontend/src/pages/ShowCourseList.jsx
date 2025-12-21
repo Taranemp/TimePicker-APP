@@ -2,16 +2,23 @@ import {useEffect, useState} from "react";
 import apiService from "@/services/apiService.js";
 import {Button} from "react-bootstrap";
 import { useNavigate } from 'react-router-dom';
+import {isAdminLoggedIn} from "@/services/AuthService.js";
 
 
 export default function ShowCourseList() {
+    const adminIsLogged = isAdminLoggedIn();
+
     const [courses, setCourses] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     const navigate = useNavigate();
     function goToCourseCalendar(id) {
-        navigate(`/course/calendar/${id}`, { replace: true });
+        if (adminIsLogged) {
+            navigate(`/admin/course/calendar/${id}`, { replace: true });
+        } else {
+            navigate(`/course/calendar/${id}`, { replace: true });
+        }
     }
 
     useEffect(() => {

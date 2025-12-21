@@ -9,16 +9,31 @@ import ShowCourseList from '@/pages/ShowCourseList.jsx';
 import ShowCourseCalendar from '@/pages/ShowCourseCalendar.jsx';
 import StudentLogin from "@/pages/StudentLogin.jsx";
 
-import { isStudentLoggedIn } from "@/services/StudentAuthService.js";
+import { isStudentLoggedIn, isAdminLoggedIn } from "@/services/AuthService.js";
+import AdminLogin from "@/pages/AdminLogin.jsx";
+import AdminDashboard from "@/pages/AdminDashboard.jsx";
+import AdminShowCourseCalendar from "@/pages/AdminShowCourseCalendar.jsx";
 
 
 
-function ProtectedRoute({ children }) {
+function ProtectedUserRoute({ children }) {
     const location = useLocation();
     const isLoggedIn = isStudentLoggedIn();
+    const adminIsLogged = isAdminLoggedIn();
 
-    if (!isLoggedIn) {
+    if (!isLoggedIn && !adminIsLogged) {
         return <Navigate to="/students-login" replace state={{ from: location }} />;
+    }
+
+    return children;
+}
+
+function ProtectedAdminRoute({ children }) {
+    const location = useLocation();
+    const adminIsLogged = isAdminLoggedIn();
+
+    if (!adminIsLogged) {
+        return <Navigate to="/admin" replace state={{ from: location }} />;
     }
 
     return children;
@@ -26,13 +41,20 @@ function ProtectedRoute({ children }) {
 
 function App() {
     const isLoggedIn = isStudentLoggedIn();
+    const adminIsLogged = isAdminLoggedIn();
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/students-login"
-                    element={isLoggedIn ? <Navigate to="/" replace /> : <StudentLogin />}
-                />
-                <Route element={<ProtectedRoute><Layout /></ProtectedRoute>}>
+                {/*admin path*/}
+                <Route path="/admin" element={adminIsLogged ? <Navigate to="/admin/dashboard" replace /> : <AdminLogin />} />
+                <Route element={<ProtectedAdminRoute><Layout /></ProtectedAdminRoute>}>
+                    <Route path="/admin/dashboard" element=<AdminDashboard /> />
+                    <Route path="/admin/course/calendar/:id" element=<AdminShowCourseCalendar /> />
+                </Route>
+
+                {/*user path*/}
+                <Route path="/students-login" element={isLoggedIn ? <Navigate to="/" replace /> : <StudentLogin />} />
+                <Route element={<ProtectedUserRoute><Layout /></ProtectedUserRoute>}>
                     <Route index element={<ShowCourseList />} />
                     <Route path="/students" element={<Students />} />
                     <Route path="/courses" element={<ShowCourseList />} />

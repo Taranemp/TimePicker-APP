@@ -1,7 +1,8 @@
 import {useState} from "react";
 import Button from "react-bootstrap/Button";
-import {handleRegisterStudent} from "@/services/StudentAuthService.js";
-import { useNavigate } from "react-router-dom";
+import {handleRegisterStudent} from "@/services/AuthService.js";
+import {Link, useNavigate} from "react-router-dom";
+import Nav from "react-bootstrap/Nav";
 
 
 export default function StudentLogin() {
@@ -51,6 +52,11 @@ export default function StudentLogin() {
                         </form>
                     </div>
                 </div>
+            </div>
+            <div className="position-fixed top-0 end-0 m-3">
+                <Nav.Link as={Link} to="/admin">
+                    <Button className="btn btn-secondary btn-sm">Admin</Button>
+                </Nav.Link>
             </div>
         </div>
     );
