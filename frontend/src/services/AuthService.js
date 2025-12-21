@@ -37,6 +37,11 @@ export async function handleStudentLogout() {
     window.location.href = "/students-login";
 }
 
+export async function handleAdminLogout() {
+    localStorage.removeItem("user_token");
+    window.location.href = "/students-login";
+}
+
 
 export async function handleRegisterStudent(name) {
     try {

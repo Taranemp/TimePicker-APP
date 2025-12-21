@@ -21,7 +21,7 @@ export default function AdminLogin() {
 
             if (res?.data?.token) {
                 localStorage.setItem("user_token", res.data.token);
-                window.location.href = "/admin/dashboard";
+                window.location.href = "/courses";
             } else {
                 if (res?.error?.response?.data?.non_field_errors) {
                     setError(res?.error?.response?.data?.non_field_errors[0]);
