@@ -6,13 +6,13 @@ import './App.css'
 import Layout from '@/Layout.jsx';
 import Students from '@/pages/Students.jsx';
 import ShowCourseList from '@/pages/ShowCourseList.jsx';
-import ShowCourseCalendar from '@/pages/ShowCourseCalendar.jsx';
 import StudentLogin from "@/pages/StudentLogin.jsx";
 
 import { isStudentLoggedIn, isAdminLoggedIn } from "@/services/AuthService.js";
 import AdminLogin from "@/pages/AdminLogin.jsx";
+
 import AdminDashboard from "@/pages/AdminDashboard.jsx";
-import AdminShowCourseCalendar from "@/pages/AdminShowCourseCalendar.jsx";
+import CourseCalendarView from "@/pages/CourseCalendarView.jsx";
 
 
 
@@ -49,7 +49,7 @@ function App() {
                 <Route path="/admin" element={adminIsLogged ? <Navigate to="/admin/dashboard" replace /> : <AdminLogin />} />
                 <Route element={<ProtectedAdminRoute><Layout /></ProtectedAdminRoute>}>
                     <Route path="/admin/dashboard" element=<AdminDashboard /> />
-                    <Route path="/admin/course/calendar/:id" element=<AdminShowCourseCalendar /> />
+                    <Route path="/admin/course/calendar/:id" element=<CourseCalendarView /> />
                 </Route>
 
                 {/*user path*/}
@@ -58,7 +58,7 @@ function App() {
                     <Route index element={<ShowCourseList />} />
                     <Route path="/students" element={<Students />} />
                     <Route path="/courses" element={<ShowCourseList />} />
-                    <Route path="/course/calendar/:id" element={<ShowCourseCalendar />} />
+                    <Route path="/course/calendar/:id" element={<CourseCalendarView />} />
                 </Route>
 
             </Routes>
