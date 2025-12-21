@@ -5,6 +5,7 @@ import {useParams} from "react-router-dom";
 import {TooltipInformation} from "@/components/partitions/TooltipInformation";
 import {getUserInfo, isAdminLoggedIn, isStudentLoggedIn} from "@/services/AuthService.js";
 import {toaste} from "@/components/partitions/ToastNotifications.jsx";
+import AlertModal from "@/components/partitions/AlertModal.jsx";
 
 async function handleRegisterStudentSlot(slotId, refreshData) {
     const student_id = localStorage.getItem('student_id');
@@ -21,6 +22,26 @@ async function handleRegisterStudentSlot(slotId, refreshData) {
         }
 
         refreshData();
+    } catch (err) {
+        alert(err?.response?.data?.error || "Failed to register slot");
+    }
+}
+
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function handleDeleteCourse(course_id) {
+    try {
+        const result = await apiService("delete", `/courses/${course_id}/`);
+        if (result.data) {
+            toaste.show("Success", "Course Deleted Successfully!", 2500, 'success');
+        } else if (result?.error?.response?.data?.message) {
+            toaste.show("Failed !", result.error.response.data.message, 2500, 'danger');
+        }
+        await sleep(2000);
+        window.location.href = "/";
     } catch (err) {
         alert(err?.response?.data?.error || "Failed to register slot");
     }
@@ -101,8 +122,31 @@ export default function CourseCalendarView() {
 
     return (
         <div>
-            <div className="d-inline-block bg-primary my-0 mb-5 py-2 ps-4 pe-5 rounded-end-5">
-                <p className="p-0 m-0 h4">{courseCalendar.title}</p>
+            <div className={'d-flex flex-row justify-content-between align-items-center mb-5'}>
+                <div className="d-inline-block bg-primary py-2 ps-4 pe-5 rounded-end-5">
+                    <p className="p-0 m-0 h4">{courseCalendar.title}</p>
+                </div>
+                {adminIsLogged &&
+                    <div className="d-flex flex-row justify-content-start align-items-center">
+                        <AlertModal
+                            message={`${courseCalendar.title} will be deleted, fine ?`}
+                            onConfirm={() => {
+                                handleDeleteCourse(courseCalendar.id)
+                            }}
+                            buttonColor="danger"
+                            confirmText="Delete"
+                            cancelText="Cancel"
+                        >
+                            <Button
+                                variant={'danger'}
+                                className="overflow-hidden text-nowrap w-100"
+                            >
+                                Delete
+                            </Button>
+                        </AlertModal>
+
+                    </div>
+                }
             </div>
 
             <div className="mx-auto" style={{maxWidth: "700px"}}>

@@ -56,6 +56,28 @@ class CourseViewSet(viewsets.ModelViewSet):
         slots.update(status=True, count=0)
         return Response({'ok': True})
 
+    def destroy(self, request, *args, **kwargs):
+        course = self.get_object()
+
+        # 1) gather all students related to this course
+        student_ids = list(
+            Student.objects.filter(
+                student_picks__calendar_slot__course=course
+            ).distinct().values_list("id", flat=True)
+        )
+
+        # 2) delete StudentPick + CalendarSlot (CASCADE handles CalendarSlot)
+        StudentPick.objects.filter(calendar_slot__course=course).delete()
+        CalendarSlot.objects.filter(course=course).delete()
+
+        # 3) delete unused students
+        Student.objects.filter(id__in=student_ids).delete()
+
+        # 4) finally delete the course
+        course.delete()
+
+        return Response({"ok": True, "message": "Course and related data deleted"}, status=status.HTTP_200_OK)
+
 class ShowCourseCalendarApiView(APIView):
     permission_classes = [AllowAny]
 
@@ -103,3 +125,5 @@ class RegisterStudentSlotApiView(APIView):
         slot.save()
 
         return Response({"success": True, "pick_id": pick.id}, status=status.HTTP_201_CREATED)
+
+
