@@ -6,7 +6,7 @@ import {TooltipInformation} from "@/components/partitions/TooltipInformation";
 import {getUserInfo, isAdminLoggedIn, isStudentLoggedIn} from "@/services/AuthService.js";
 import {toaste} from "@/components/partitions/ToastNotifications.jsx";
 import AlertModal from "@/components/partitions/AlertModal.jsx";
-
+import Sleep from '@/components/partitions/Sleep.js'
 async function handleRegisterStudentSlot(slotId, refreshData) {
     const student_id = localStorage.getItem('student_id');
     try {
@@ -28,9 +28,7 @@ async function handleRegisterStudentSlot(slotId, refreshData) {
 }
 
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+
 
 async function handleDeleteCourse(course_id) {
     try {
@@ -40,7 +38,7 @@ async function handleDeleteCourse(course_id) {
         } else if (result?.error?.response?.data?.message) {
             toaste.show("Failed !", result.error.response.data.message, 2500, 'danger');
         }
-        await sleep(2000);
+        await Sleep(1000);
         window.location.href = "/";
     } catch (err) {
         alert(err?.response?.data?.error || "Failed to register slot");
