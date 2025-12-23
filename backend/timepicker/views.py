@@ -2,7 +2,7 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAdminUser
 
 from .models import Course, CalendarSlot, StudentPick, Student
 from .serializers import CourseSerializer, CalendarSlotSerializer, StudentSerializer, StudentPickSerializer, RegisterSlotSerializer
@@ -14,8 +14,13 @@ TIMES = ["3-5", "5-7", "7-9"]
 class StudentViewSet(viewsets.ModelViewSet):
     """
     Student endpoints: list, create, retrieve, update, destroy
+    Admin only access
     """
-    permission_classes = [AllowAny]
+    def get_permissions(self):
+        if self.action == 'destroy':
+            return [IsAdminUser()]   # only admins can delete
+        return [AllowAny()]
+
     queryset = Student.objects.all().order_by('-created_at')
     serializer_class = StudentSerializer
 
@@ -25,17 +30,16 @@ class StudentViewSet(viewsets.ModelViewSet):
         return Response({"ok": True, "message": "Student deleted successfully"}, status=status.HTTP_200_OK)
 
 class CourseViewSet(viewsets.ModelViewSet):
-    """
-    Course endpoints: list, create, retrieve, update, destroy
-    When creating a Course, default 7x3 CalendarSlot rows are created automatically.
-    """
-    permission_classes = [AllowAny]
     queryset = Course.objects.all().order_by('-created_at')
     serializer_class = CourseSerializer
 
+    def get_permissions(self):
+        if self.action == 'destroy':
+            return [IsAdminUser()]   # only admins can delete
+        return [AllowAny()]          # all other actions are public
+
     def perform_create(self, serializer):
         course = serializer.save()
-        # Create 7x3 calendar slots automatically
         slots = [
             CalendarSlot(course=course, day=day, time=time, status=True, count=0)
             for day in DAYS for time in TIMES
@@ -44,39 +48,27 @@ class CourseViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['post'])
     def reset_calendar(self, request, pk=None):
-        """
-        Reset the calendar for a course (clear picks, reset counts, set status True).
-        POST /api/courses/{id}/reset_calendar/
-        """
         course = self.get_object()
-        # delete all related student picks
         StudentPick.objects.filter(calendar_slot__course=course).delete()
-        # reset slots
-        slots = CalendarSlot.objects.filter(course=course)
-        slots.update(status=True, count=0)
+        CalendarSlot.objects.filter(course=course).update(status=True, count=0)
         return Response({'ok': True})
 
     def destroy(self, request, *args, **kwargs):
         course = self.get_object()
 
-        # 1) gather all students related to this course
         student_ids = list(
             Student.objects.filter(
                 student_picks__calendar_slot__course=course
             ).distinct().values_list("id", flat=True)
         )
 
-        # 2) delete StudentPick + CalendarSlot (CASCADE handles CalendarSlot)
         StudentPick.objects.filter(calendar_slot__course=course).delete()
         CalendarSlot.objects.filter(course=course).delete()
-
-        # 3) delete unused students
         Student.objects.filter(id__in=student_ids).delete()
-
-        # 4) finally delete the course
         course.delete()
 
         return Response({"ok": True, "message": "Course and related data deleted"}, status=status.HTTP_200_OK)
+
 
 class ShowCourseCalendarApiView(APIView):
     permission_classes = [AllowAny]
@@ -127,7 +119,8 @@ class RegisterStudentSlotApiView(APIView):
         return Response({"success": True, "pick_id": pick.id}, status=status.HTTP_201_CREATED)
 
 class ActivateSlotApiView(APIView):
-    permission_classes = [AllowAny]
+    """Admin only - activate a calendar slot"""
+    permission_classes = [IsAdminUser]
 
     def post(self, request, slot_id=None):
         slot_id = slot_id or request.data.get("slot_id") or request.query_params.get("slot_id")
@@ -147,7 +140,8 @@ class ActivateSlotApiView(APIView):
         )
 
 class DeactivateSlotApiView(APIView):
-    permission_classes = [AllowAny]
+    """Admin only - deactivate a calendar slot"""
+    permission_classes = [IsAdminUser]
 
     def post(self, request, slot_id=None):
         slot_id = slot_id or request.data.get("slot_id") or request.query_params.get("slot_id")
