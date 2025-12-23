@@ -126,4 +126,43 @@ class RegisterStudentSlotApiView(APIView):
 
         return Response({"success": True, "pick_id": pick.id}, status=status.HTTP_201_CREATED)
 
+class ActivateSlotApiView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, slot_id=None):
+        slot_id = slot_id or request.data.get("slot_id") or request.query_params.get("slot_id")
+
+        if not slot_id:
+            return Response({"ok": False, "error": "slot_id is required"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        slot = get_object_or_404(CalendarSlot, id=slot_id)
+
+        slot.status = True
+        slot.save(update_fields=["status", "updated_at"])
+
+        return Response(
+            {"ok": True, "message": "Slot activated", "slot": CalendarSlotSerializer(slot).data},
+            status=status.HTTP_200_OK
+        )
+
+class DeactivateSlotApiView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, slot_id=None):
+        slot_id = slot_id or request.data.get("slot_id") or request.query_params.get("slot_id")
+
+        if not slot_id:
+            return Response({"ok": False, "error": "slot_id is required"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        slot = get_object_or_404(CalendarSlot, id=slot_id)
+
+        slot.status = False
+        slot.save(update_fields=["status", "updated_at"])
+
+        return Response(
+            {"ok": True, "message": "Slot deactivated", "slot": CalendarSlotSerializer(slot).data},
+            status=status.HTTP_200_OK
+        )
 

@@ -45,6 +45,26 @@ async function handleDeleteCourse(course_id) {
     }
 }
 
+async function handleActivateSlot(slot_id, slot_status, refreshData) {
+    try {
+        let result = null
+        if (slot_status){
+            result = await apiService("post", `/slots/${slot_id}/deactivate/`);
+        } else {
+            result = await apiService("post", `/slots/${slot_id}/activate/`);
+        }
+
+        if (result.data) {
+            toaste.show("Success", "Slot status change Successfully!", 2500, 'success');
+        } else if (result?.error?.response?.data?.message) {
+            toaste.show("Failed !", result.error.response.data.message, 2500, 'danger');
+        }
+        refreshData();
+    } catch (err) {
+        alert(err?.response?.data?.error || "Failed to slot status change");
+    }
+}
+
 export default function CourseCalendarView() {
     const isUserLoggedIn = isStudentLoggedIn();
     const adminIsLogged = isAdminLoggedIn();
@@ -166,7 +186,7 @@ export default function CourseCalendarView() {
                                 return (
                                     <>
                                         {adminIsLogged &&
-                                            <td key={time} className="text-center">
+                                            <td key={time} className="text-center" onClick={() => handleActivateSlot(slot.id, slot.status, fetchCalendar)}>
                                                 {slot.status ? (
                                                     <TooltipInformation tooltipContent={
                                                         <div>
@@ -193,7 +213,7 @@ export default function CourseCalendarView() {
                                                         </Button>
                                                     </TooltipInformation>
                                                 ) : (
-                                                    <Button variant="secondary" disabled size="sm">
+                                                    <Button variant="secondary" size="sm">
                                                     </Button>
                                                 )}
                                             </td>
