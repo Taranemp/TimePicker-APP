@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
             name='CalendarSlot',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('day', models.CharField(choices=[('saturday', 'Saturday'), ('sunday', 'Sunday'), ('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday'), ('friday', 'Friday')], max_length=10)),
+                ('day', models.CharField(choices=[('saturday', 'Saturday'), ('sunday', 'Sunday'), ('monday', 'Monday'), ('tuesday', 'Tuesday'), ('wednesday', 'Wednesday'), ('thursday', 'Thursday')], max_length=10)),
                 ('time', models.CharField(choices=[('3-5', '3 PM - 5 PM'), ('5-7', '5 PM - 7 PM'), ('7-9', '7 PM - 9 PM')], max_length=5)),
                 ('status', models.BooleanField(default=True)),
                 ('count', models.PositiveIntegerField(default=0)),

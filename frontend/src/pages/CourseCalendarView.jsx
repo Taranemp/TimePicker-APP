@@ -50,27 +50,6 @@ async function handleDeleteCourse(course_id) {
   window.location.href = "/";
 }
 
-async function handleActivateSlot(slot_id, slot_status, refreshData) {
-  let result = null;
-  if (slot_status) {
-    result = await apiService("post", `/slots/${slot_id}/deactivate/`);
-  } else {
-    result = await apiService("post", `/slots/${slot_id}/activate/`);
-  }
-
-  if (result.data) {
-    toaste.show(
-      "Success",
-      "Slot status changed successfully!",
-      2500,
-      "success"
-    );
-  } else {
-    toaste.show("Failed!", result.message, 2500, "danger");
-  }
-
-  refreshData();
-}
 
 export default function CourseCalendarView() {
   const isUserLoggedIn = isStudentLoggedIn();
@@ -94,6 +73,30 @@ export default function CourseCalendarView() {
     } else {
       return false;
     }
+  }
+
+  
+  async function handleActivateSlot(slot_id, slot_status) {
+    let result = null;
+    if (slot_status) {
+      result = await apiService("post", `/slots/${slot_id}/deactivate/`);
+    } else {
+      result = await apiService("post", `/slots/${slot_id}/activate/`);
+    }
+
+    if (result.data) {
+      toaste.show(
+        "Success",
+        "Slot status changed successfully!",
+        2500,
+        "success"
+      );
+    } else {
+      toaste.show("Failed!", result.message, 2500, "danger");
+    }
+
+    setCourseCalendar(result.data.course)
+    
   }
 
   const fetchCalendar = useCallback(async () => {
@@ -124,6 +127,7 @@ export default function CourseCalendarView() {
     if (!calendarMap[slot.day]) calendarMap[slot.day] = {};
     calendarMap[slot.day][slot.time] = slot;
   });
+
 
   function setColor(status, count) {
     if (status && count > 0) {
@@ -189,10 +193,9 @@ export default function CourseCalendarView() {
           </thead>
           <tbody>
             {days.map((day) => {
-              if (day != "friday") {
-                return (
-                  <tr key={day}>
-                    <td style={{ textTransform: "capitalize" }}>{day}</td>
+              return (
+                <tr key={day}>
+                    <td style={{ textTransform: "capitalize" }}>{day}</td> 
                     {times.map((time) => {
                       const slot = calendarMap[day]?.[time];
                       return (
@@ -294,8 +297,7 @@ export default function CourseCalendarView() {
                       );
                     })}
                   </tr>
-                );
-              }
+              );
             })}
           </tbody>
         </Table>

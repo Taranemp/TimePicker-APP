@@ -45,7 +45,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS("Courses created."))
 
         # === Create CalendarSlots ===
-        days = ["saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday"]
+        days = ["saturday", "sunday", "monday", "tuesday", "wednesday", "thursday"]
         times = ["3-5", "5-7", "7-9"]
 
         for course in courses:

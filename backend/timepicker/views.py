@@ -8,7 +8,7 @@ from .models import Course, CalendarSlot, StudentPick, Student
 from .serializers import CourseSerializer, CalendarSlotSerializer, StudentSerializer, StudentPickSerializer, RegisterSlotSerializer
 from django.shortcuts import get_object_or_404
 
-DAYS = ["saturday", "sunday", "monday", "tuesday", "wednesday", "thursday", "friday"]
+DAYS = ["saturday", "sunday", "monday", "tuesday", "wednesday", "thursday"]
 TIMES = ["3-5", "5-7", "7-9"]
 
 class StudentViewSet(viewsets.ModelViewSet):
@@ -41,7 +41,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         course = serializer.save()
         slots = [
-            CalendarSlot(course=course, day=day, time=time, status=True, count=0)
+            CalendarSlot(course=course, day=day, time=time, status=False, count=0)
             for day in DAYS for time in TIMES
         ]
         CalendarSlot.objects.bulk_create(slots)
@@ -50,7 +50,7 @@ class CourseViewSet(viewsets.ModelViewSet):
     def reset_calendar(self, request, pk=None):
         course = self.get_object()
         StudentPick.objects.filter(calendar_slot__course=course).delete()
-        CalendarSlot.objects.filter(course=course).update(status=True, count=0)
+        CalendarSlot.objects.filter(course=course).update(status=False, count=0)
         return Response({'ok': True})
 
     def destroy(self, request, *args, **kwargs):
@@ -77,11 +77,9 @@ class ShowCourseCalendarApiView(APIView):
         course = get_object_or_404(Course, id=course_id)
         course_serializer = CourseSerializer(course)
 
-        day_order = ['saturday','sunday','monday','tuesday','wednesday','thursday','friday']
         slots = CalendarSlot.objects.filter(course=course)
-        slots = sorted(slots, key=lambda s: (day_order.index(s.day), s.time))
-
         slots_serializer = CalendarSlotSerializer(slots, many=True)
+
         response_data = course_serializer.data
         response_data['calendar_slots'] = slots_serializer.data
         return Response(response_data, status=200)
@@ -167,8 +165,15 @@ class ActivateSlotApiView(APIView):
         slot.status = True
         slot.save(update_fields=["status", "updated_at"])
 
+        course = Course.objects.get(id=slot.course.id)
+
         return Response(
-            {"ok": True, "message": "Slot activated", "slot": CalendarSlotSerializer(slot).data},
+            {
+                "ok": True, 
+                "message": "Slot activated", 
+                "slot": CalendarSlotSerializer(slot).data,
+                "course": CourseSerializer(slot.course).data
+            },
             status=status.HTTP_200_OK
         )
 
@@ -188,8 +193,14 @@ class DeactivateSlotApiView(APIView):
         slot.status = False
         slot.save(update_fields=["status", "updated_at"])
 
+        course = Course.objects.get(id=slot.course.id)
         return Response(
-            {"ok": True, "message": "Slot deactivated", "slot": CalendarSlotSerializer(slot).data},
+            {
+                "ok": True, 
+                "message": "Slot deactivated", 
+                "slot": CalendarSlotSerializer(slot).data,
+                "course": CourseSerializer(slot.course).data
+            },
             status=status.HTTP_200_OK
         )
 
