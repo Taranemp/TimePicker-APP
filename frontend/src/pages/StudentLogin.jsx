@@ -19,8 +19,7 @@ export default function StudentLogin() {
 
         const result = await handleRegisterStudent(name);
 
-        if (!result.ok) {
-            alert(JSON.stringify(result.error));
+        if (!result) {
             return;
         }
 

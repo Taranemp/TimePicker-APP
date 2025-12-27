@@ -8,7 +8,7 @@ import AlertModal from '@/components/partitions/AlertModal.jsx'
 async function handleLogoutStudent(){
     const result = await handleStudentLogout();
 
-    if (!result.ok) {
+    if (!result) {
         return;
     }
 
@@ -18,7 +18,7 @@ async function handleLogoutStudent(){
 async function handleLogoutAdmin(){
     const result = await handleAdminLogout();
 
-    if (!result.ok) {
+    if (!result) {
         return;
     }
 

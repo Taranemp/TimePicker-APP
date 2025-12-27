@@ -45,9 +45,9 @@ function App() {
         <BrowserRouter>
             <Routes>
                 {/*admin path*/}
-                <Route path="/admin" element={adminIsLogged ? <Navigate to="/admin/dashboard" replace /> : <AdminLogin />} />
+                <Route path="/admin" element={adminIsLogged ? <Navigate to="/courses" replace /> : <AdminLogin />} />
                 <Route element={<ProtectedAdminRoute><Layout /></ProtectedAdminRoute>}>
-                    <Route path="/admin/course/calendar/:id" element=<CourseCalendarView /> />
+                    <Route path="/admin/course/calendar/:id" element={<CourseCalendarView />} />
                     <Route path="/admin/students" element={<Students />} />
                 </Route>
 

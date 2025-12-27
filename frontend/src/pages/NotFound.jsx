@@ -1,8 +1,19 @@
 import {Button} from "react-bootstrap";
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
+import { useEffect } from "react";
 
 export default function NotFound() {
+    const navigate = useNavigate();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate("/", { replace: true }); // redirect to index after 3 seconds
+    }, 2000);
+
+    return () => clearTimeout(timer); // cleanup in case component unmounts
+  }, [navigate]);
+
     return (
         <div className="container-fluid">
             <div className="row mx-auto justify-content-center align-items-center" style={{height: "80vh"}}>

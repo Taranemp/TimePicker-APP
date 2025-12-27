@@ -7,11 +7,9 @@ import {handleAdminLogout} from "@/services/AuthService.js";
 
 async function handleLogoutAdmin(){
     const result = await handleAdminLogout();
-
-    if (!result.ok) {
+    if (!result) {
         return;
     }
-
     window.location.reload()
 }
 

@@ -1,43 +1,28 @@
-import {useEffect, useState} from "react";
-import apiService from "@/services/apiService.js";
-import {Button} from "react-bootstrap";
-import {useNavigate} from 'react-router-dom';
-import {isAdminLoggedIn} from "@/services/AuthService.js";
+import { Button } from "react-bootstrap";
+import { useNavigate } from 'react-router-dom';
+import { isAdminLoggedIn } from "@/services/AuthService.js";
 import CreateCourseModal from "@/components/partitions/CreateCourseModal.jsx";
+import { getCourses } from "@/services/courseService.js";
+import useFetch from "@/hooks/useFetch.js";
 
 
 export default function ShowCourseList() {
     const adminIsLogged = isAdminLoggedIn();
 
-    const [courses, setCourses] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const { data: courses, loading, error } = useFetch(getCourses, []);
 
     const navigate = useNavigate();
 
     function goToCourseCalendar(id) {
         if (adminIsLogged) {
-            navigate(`/admin/course/calendar/${id}`, {replace: true});
+            navigate(`/admin/course/calendar/${id}`, { replace: true });
         } else {
-            navigate(`/course/calendar/${id}`, {replace: true});
+            navigate(`/course/calendar/${id}`, { replace: true });
         }
     }
 
-    useEffect(() => {
-        const fetchCourses = async () => {
-            const result = await apiService("get", "/courses/");
-            if (result.data) {
-                setCourses(result.data);
-            } else {
-                setError(result.error);
-            }
-            setLoading(false);
-        };
-        fetchCourses();
-    }, [])
-
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>Error loading courses</div>;
+    if (error) return <div>Error loading courses: {error}</div>;
 
     return (
         <div>
@@ -59,7 +44,7 @@ export default function ShowCourseList() {
                 }
             </div>
             <div className="row mx-auto">
-                {courses.map((course) => (
+                {courses && courses.map((course) => (
                     <div className="col-6 col-sm-6 col-md-4 col-lg-3 col-xl-2 xol-xxl-1 p-1" key={course.id}>
                         <Button
                             onClick={() => {
