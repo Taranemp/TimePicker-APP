@@ -7,13 +7,21 @@ import {getUserInfo, isAdminLoggedIn, isStudentLoggedIn} from "@/services/AuthSe
 import {toaste} from "@/components/partitions/ToastNotifications.jsx";
 import AlertModal from "@/components/partitions/AlertModal.jsx";
 import Sleep from '@/components/partitions/Sleep.js'
-async function handleRegisterStudentSlot(slotId, refreshData) {
+async function handleRegisterStudentSlot(slotId, is_selected, refreshData) {
     const student_id = localStorage.getItem('student_id');
     try {
-        const result = await apiService("post", `/register-slot/`, {
-            calendar_slot: slotId,
-            student: student_id
-        });
+        let result = null
+        if (!is_selected) {
+            result = await apiService("post", `/register-slot/select/`, {
+                calendar_slot: slotId,
+                student: student_id
+            });
+        } else {
+            result = await apiService("post", `/register-slot/deselect/`, {
+                calendar_slot: slotId,
+                student: student_id
+            });
+        }
 
         if (result.data) {
             toaste.show("Success", "Data saved successfully!", 2500, 'success');
@@ -228,7 +236,7 @@ export default function CourseCalendarView() {
                                                         size="sm"
                                                         className={`w-100 ${is_selected(slot.student_picks) ? 'btn-success' : 'btn-primary'}`}
                                                         style={{maxWidth: "100px"}}
-                                                        onClick={() => handleRegisterStudentSlot(slot.id, fetchCalendar)}
+                                                        onClick={() => handleRegisterStudentSlot(slot.id, is_selected(slot.student_picks), fetchCalendar)}
                                                     >
                                                         {slot.status ? `${slot.id} [${slot.count}]` : "..."}
                                                     </Button>

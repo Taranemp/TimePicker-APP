@@ -86,9 +86,42 @@ class ShowCourseCalendarApiView(APIView):
         response_data['calendar_slots'] = slots_serializer.data
         return Response(response_data, status=200)
 
-class RegisterStudentSlotApiView(APIView):
+class DeselectStudentSlotApiView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = RegisterSlotSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        slot_id = serializer.validated_data['calendar_slot']
+        student_id = serializer.validated_data['student']
+
+        slot = get_object_or_404(CalendarSlot, id=slot_id)
+        student = get_object_or_404(Student, id=student_id)
+
+        # Check if the student is actually registered
+        pick = StudentPick.objects.filter(calendar_slot=slot, student=student).first()
+
+        if not pick:
+            return Response({"message": "Student is not registered in this slot"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # Delete the pick
+        pick_id = pick.id
+        pick.delete()
+
+        # Update slot count
+        slot.count = slot.student_picks.count()
+        slot.save()
+
+        return Response({"success": True, "removed_pick_id": pick_id}, status=status.HTTP_200_OK)
+
+
+
+class SelectStudentSlotApiView(APIView):
     """
-    Register a student in a calendar slot:
+    Register Selection a student in a calendar slot:
     POST /api/register-slot/
     Body: { "calendar_slot": slot_id, "student_id": student_id }
     """
