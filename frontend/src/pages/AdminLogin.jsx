@@ -1,7 +1,7 @@
 import { useState } from "react";
 import apiService from "@/services/apiService";
 import Button from "react-bootstrap/Button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 export default function AdminLogin() {
   const [username, setUsername] = useState("");
@@ -63,13 +63,18 @@ export default function AdminLogin() {
 
             {error && <div className="alert alert-danger py-2">{error}</div>}
 
-            <Button
-              type={"submit"}
-              className="btn btn-primary w-100 mt-4"
-              disabled={loading}
-            >
-              {loading ? "Logging in…" : "Login"}
-            </Button>
+            <div className="d-flex gap-2">
+              <Button
+                type={"submit"}
+                className="btn btn-primary w-100 mt-4"
+                disabled={loading}
+              >
+                {loading ? "Logging in…" : "Login"}
+              </Button>
+              <Link className="btn btn-secondary w-100 mt-4" to="/">
+                Student
+              </Link>
+            </div>
           </form>
         </div>
       </div>

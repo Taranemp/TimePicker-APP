@@ -12,30 +12,7 @@ import { toaste } from "@/components/partitions/ToastNotifications.jsx";
 import AlertModal from "@/components/partitions/AlertModal.jsx";
 import Sleep from "@/components/partitions/Sleep.js";
 
-async function handleRegisterStudentSlot(slotId, is_selected, refreshData) {
-  const student_id = localStorage.getItem("student_id");
 
-  let result = null;
-  if (!is_selected) {
-    result = await apiService("post", `/register-slot/select/`, {
-      calendar_slot: slotId,
-      student: student_id,
-    });
-  } else {
-    result = await apiService("post", `/register-slot/deselect/`, {
-      calendar_slot: slotId,
-      student: student_id,
-    });
-  }
-
-  if (result.data) {
-    toaste.show("Success", "Data saved successfully!", 2500, "success");
-  } else {
-    toaste.show("Failed!", result.message, 2500, "danger");
-  }
-
-  refreshData();
-}
 
 async function handleDeleteCourse(course_id) {
   const result = await apiService("delete", `/courses/${course_id}/`);
@@ -146,6 +123,33 @@ export default function CourseCalendarView() {
       }
     }
   }
+
+  async function handleRegisterStudentSlot(slotId, is_selected) {
+  const student_id = localStorage.getItem("student_id");
+
+  let result = null;
+  if (!is_selected) {
+    result = await apiService("post", `/register-slot/select/`, {
+      calendar_slot: slotId,
+      student: student_id,
+    });
+  } else {
+    result = await apiService("post", `/register-slot/deselect/`, {
+      calendar_slot: slotId,
+      student: student_id,
+    });
+  }
+
+  setCourseCalendar(result.data.course)
+
+  if (result.data) {
+    toaste.show("Success", "Data saved successfully!", 2500, "success");
+  } else {
+    toaste.show("Failed!", result.message, 2500, "danger");
+  }
+
+
+}
 
   return (
     <div>

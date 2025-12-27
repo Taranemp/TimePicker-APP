@@ -98,6 +98,11 @@ class DeselectStudentSlotApiView(APIView):
         slot = get_object_or_404(CalendarSlot, id=slot_id)
         student = get_object_or_404(Student, id=student_id)
 
+
+        course = Course.objects.get(calendar_slots=slot)
+        if not course:
+            return Response({"message": "course is not exist"},
+                            status=status.HTTP_400_BAD_REQUEST)
         # Check if the student is actually registered
         pick = StudentPick.objects.filter(calendar_slot=slot, student=student).first()
 
@@ -113,7 +118,19 @@ class DeselectStudentSlotApiView(APIView):
         slot.count = slot.student_picks.count()
         slot.save()
 
-        return Response({"success": True, "removed_pick_id": pick_id}, status=status.HTTP_200_OK)
+        return Response(
+            {
+                "success": True, 
+                "pick_id": pick.id,
+                
+                "slot": CalendarSlotSerializer(slot).data,
+                "course": CourseSerializer(course).data
+            },
+            status=status.HTTP_200_OK
+        )
+        
+
+        # return Response({"success": True, "removed_pick_id": pick_id}, status=status.HTTP_200_OK)
 
 
 
@@ -147,7 +164,19 @@ class SelectStudentSlotApiView(APIView):
         slot.count = slot.student_picks.count()
         slot.save()
 
-        return Response({"success": True, "pick_id": pick.id}, status=status.HTTP_201_CREATED)
+        course = Course.objects.get(calendar_slots=slot)
+
+        return Response(
+            {
+                "success": True, 
+                "pick_id": pick.id,
+                
+                "slot": CalendarSlotSerializer(slot).data,
+                "course": CourseSerializer(course).data
+            },
+            status=status.HTTP_200_OK
+        )
+
 
 class ActivateSlotApiView(APIView):
     """Admin only - activate a calendar slot"""
