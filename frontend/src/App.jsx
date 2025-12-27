@@ -38,6 +38,7 @@ function ProtectedAdminRoute({ children }) {
 }
 
 function App() {
+
     const isLoggedIn = isStudentLoggedIn();
     const adminIsLogged = isAdminLoggedIn();
     return (

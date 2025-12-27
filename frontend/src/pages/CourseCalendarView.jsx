@@ -238,7 +238,7 @@ export default function CourseCalendarView() {
                                                         style={{maxWidth: "100px"}}
                                                         onClick={() => handleRegisterStudentSlot(slot.id, is_selected(slot.student_picks), fetchCalendar)}
                                                     >
-                                                        {slot.status ? `${slot.id} [${slot.count}]` : "..."}
+                                                        {slot.status ? slot.count : "..."}
                                                     </Button>
                                                 ) : (
                                                     <Button variant="secondary" disabled size="sm">
