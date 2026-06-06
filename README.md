@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<h1 align="center">📅 TimePicker APP</h1>
 
-## Getting Started
+<p align="center">
+  <strong>سیستم ثبت‌نام کلاس‌ها – دانشجویان روز و ساعت مورد نظر خود را انتخاب می‌کنند</strong>
+</p>
 
-First, run the development server:
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-15-black" alt="Next.js">
+  <img src="https://img.shields.io/badge/React-18-blue" alt="React">
+  <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
+  <img src="https://img.shields.io/badge/Status-Active-brightgreen" alt="Status">
+</p>
+
+---
+
+## 📖 درباره پروژه (چیست و چه کاری انجام می‌دهد)
+
+این یک **اپلیکیشن ثبت‌نام کلاس** است که با Next.js ساخته شده.
+
+### جریان کاری (Step by Step):
+
+1. **دانشجو وارد سایت می‌شود**
+2. **نام و شماره تماس خود را وارد می‌کند**
+3. **از طریق تقویم (Calendar)، روز و ساعت دلخواه خود را برای حضور در کلاس انتخاب می‌کند**
+4. **اطلاعات ذخیره می‌شود** (در دیتابیس یا localStorage)
+
+---
+
+## 🎯 هدف پروژه
+
+- ثبت نام دانشجویان در کلاس‌ها به صورت آنلاین
+- نمایش تقویم تعاملی (روزهای هفته + ساعت‌های قابل انتخاب)
+- جلوگیری از تداخل زمانی (یک دانشجو نمی‌تواند همزمان دو کلاس برود)
+- ذخیره و مدیریت اطلاعات دانشجویان
+
+---
+
+## ✨ امکانات (Features)
+
+- ✅ **ورود دانشجو** بدون نیاز به رمز عبور (فقط نام و شماره)
+- ✅ **تقویم تعاملی** برای انتخاب روز هفته
+- ✅ **انتخاب ساعت** (مثلاً ۱۰:۰۰ تا ۱۱:۳۰)
+- ✅ **ذخیره اطلاعات** در دیتابیس یا API
+- ✅ **اعتبارسنجی ورودی‌ها** (نام خالی نباشد، شماره معتبر باشد)
+- ✅ **نمایش وضعیت ثبت‌نام** (موفقیت‌آمیز یا خطا)
+- ✅ **طراحی واکنش‌گرا** (مناسب موبایل و دسکتاپ)
+
+---
+
+## 🚀 نصب و راه‌اندازی
+
+### پیش‌نیازها
+- Node.js 18 یا بالاتر
+- npm / yarn / pnpm
+
+### مراحل نصب
 
 ```bash
+# 1. کلون کردن پروژه
+git clone https://github.com/Taranemp/TimePicker-APP.git
+cd TimePicker-APP
+
+# 2. نصب وابستگی‌ها
+npm install
+
+# 3. اجرای سرور توسعه
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
